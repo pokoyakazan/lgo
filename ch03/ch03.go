@@ -85,6 +85,7 @@ func main() {
 		var s2 string = string(b)
 		fmt.Println("s1: ", s1) // x
 		fmt.Println("s2: ", s2) // y
+		fmt.Println("-----------------------------")
 	}
 	{
 		var s string = "Hello, 世界"
@@ -92,10 +93,75 @@ func main() {
 		var rs []rune = []rune(s)
 		fmt.Println("bs: ", bs)
 		fmt.Println("rs: ", rs)
+		fmt.Println("-----------------------------")
 		/*
 			bs:  [72 101 108 108 111 44 32 228 184 150 231 149 140]
 			rs:  [72 101 108 108 111 44 32 19990 30028]
 		*/
+	}
+	// 3.4 マップ
+	{
+		totalWins := map[string]int{}
+		totalWins["carp"] = 10
+		fmt.Println(totalWins)
+		// map[carp:10]
+		teams := map[string][]string{
+			"riders": []string{"hoge", "fuga"},
+			"nits":   []string{"piyo", "poko"},
+			"carp":   []string{"kazan"},
+		}
+		fmt.Println(teams)
+		fmt.Println("-----------------------------")
+		// map[carp:[kazan] nits:[piyo poko] riders:[hoge fuga]]
+
+		m := map[string]int{
+			"hello": 5,
+			"world": 0,
+		}
+		v, ok := m["hello"]
+		fmt.Println(v, ok) // 5 true
+		v, ok = m["world"]
+		fmt.Println(v, ok) // 0 true
+		v, ok = m["goodbye"]
+		fmt.Println(v, ok) // 0 false
+		delete(m, "hello")
+		fmt.Println(m) // map[world:0]
+
+		// マップをセットの代わりに使う
+		intSet := map[int]bool{}
+		vals := []int{5, 10, 2, 5, 8, 7, 3, 9, 1, 2, 10}
+		for _, v := range vals {
+			intSet[v] = true
+		}
+		fmt.Println(intSet[5])   // true
+		fmt.Println(intSet[500]) // false
+		fmt.Println("-----------------------------")
+	}
+	// 3.5 構造体
+	{
+		type person struct {
+			name string
+			age  int
+			pet  string
+		}
+		beth := person{
+			age:  30,
+			name: "Beth",
+		}
+		fmt.Println(beth) // {Beth 30 }
+		beth.pet = "cat"
+		fmt.Println(beth) // {Beth 30 cat}
+
+		// 無名構造体
+		pet := struct {
+			name string
+			kind string
+		}{
+			name: "pochi",
+			kind: "dog",
+		}
+		fmt.Println(pet) // {pochi dog}
+		fmt.Println("-----------------------------")
 	}
 
 }
