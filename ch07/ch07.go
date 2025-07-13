@@ -33,8 +33,49 @@ func (c *Counter) Increment() { // ポインタレシーバ(cはポインタ)
 	c.lastUpdated = time.Now()
 }
 
-func (c Counter) StringC() int { // 値型レシーバ(cにはコピーが渡される)
+func (c Counter) StringC() string { // 値型レシーバ(cにはコピーが渡される)
 	return fmt.Sprintf("合計: %d, 更新: %v", c.total, c.lastUpdated)
+}
+
+func doUpdateWrong(c Counter) { // 間違い
+	c.total++ // cのコピーに対してIncrementが行われる
+	c.lastUpdated = time.Now()
+}
+
+func doUpdateRight(c *Counter) { // 正しい
+	c.total++ // cに対してIncrementが行われる
+	c.lastUpdated = time.Now()
+}
+
+// 7.2.2 nilへの対応
+type IntTree struct {
+	val         int
+	left, right *IntTree
+}
+
+func (it *IntTree) Insert(v int) *IntTree {
+	if it == nil {
+		return &IntTree{val: v} // nilの場合は新しいIntTreeを返す
+	}
+	if v < it.val {
+		it.left = it.left.Insert(v)
+	} else if v > it.val {
+		it.right = it.right.Insert(v)
+	}
+	return it
+}
+
+func (it *IntTree) Contains(val int) bool {
+	switch {
+	case it == nil:
+		return false
+	case val < it.val:
+		return it.left.Contains(val)
+	case val > it.val:
+		return it.right.Contains(val)
+	default:
+		return true
+	}
 }
 
 func main() {
@@ -46,11 +87,29 @@ func main() {
 		f := p.String()
 		fmt.Println(f) // 出力: 太郎 山田 (30)
 	}
+	fmt.Println("-----------------------------")
 	// 7.2.1 ポインタ型レシーバと値型レシーバ
 	{
 		var c Counter
-		fmt.Plintln(c.lastUpdated.StringC())
-
+		fmt.Println(c)
+		fmt.Println(c.StringC())
+		c.Increment() // (&c).Increment()と書かなくても良い
+		fmt.Println(c.StringC())
+		doUpdateWrong(c)
+		fmt.Println(c.StringC())
+		doUpdateRight(&c)
+		fmt.Println(c.StringC())
 	}
-
+	fmt.Println("-----------------------------")
+	// 7.2.2 nilへの対応
+	{
+		var it *IntTree
+		it = it.Insert(5) // nilの場合は新しいIntTreeを返す
+		it = it.Insert(3)
+		it = it.Insert(10)
+		it = it.Insert(2)
+		fmt.Println(it.Contains(2))  // true
+		fmt.Println(it.Contains(12)) // false
+		fmt.Println(*it)             // 5 0x14000142078 0x14000142090}
+	}
 }
