@@ -78,6 +78,15 @@ func (it *IntTree) Contains(val int) bool {
 	}
 }
 
+// 7.2.3 メソッドは関数
+type Adder struct {
+	start int
+}
+
+func (a Adder) AddTo(val int) int {
+	return a.start + val
+}
+
 func main() {
 	// 7.2 メソッド
 	{
@@ -105,11 +114,29 @@ func main() {
 	{
 		var it *IntTree
 		it = it.Insert(5) // nilの場合は新しいIntTreeを返す
+		fmt.Println(*it)  // 5 <nil> <nil>}
 		it = it.Insert(3)
+		fmt.Println(*it)      // 5 0x14000142090 <nil>}
+		fmt.Println(*it.left) // {3 <nil> <nil>}
 		it = it.Insert(10)
 		it = it.Insert(2)
 		fmt.Println(it.Contains(2))  // true
 		fmt.Println(it.Contains(12)) // false
 		fmt.Println(*it)             // 5 0x14000142078 0x14000142090}
+	}
+	fmt.Println("-----------------------------")
+	// 7.2.3 メソッドは関数
+	{
+		a := Adder{start: 10}
+		fmt.Println(a.AddTo(5)) // 15
+		f1 := a.AddTo           // Adder型の変数aのAddToメソッドをf1に代入
+		fmt.Println(f1(10))     // 20
+		// メソッド式 -> 第一引数がメソッドのレシーバになる
+		f2 := Adder.AddTo
+		fmt.Println(f2(a, 15)) // 25 レシーバとしてaを渡す
+	}
+	// 7.2.7 iotaと列挙型
+	{
+		
 	}
 }
